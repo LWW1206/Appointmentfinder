@@ -1,100 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Planer</title>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/style.css">
-    </head>
-    <body>
-        
-            <header>
-                <nav class="navigation">
-                    <a href="index.html">Home</a>
-                    <a href="#" id="add-app-link">+</a>
-                </nav>
-            </header>
-    
-            <div class="wrapper">
-                <div class="h2"><h2><b>List of all Appointments</b></h2></div>
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action mylistitem">Cras justo odio </a>
-                    <a href="#" class="list-group-item list-group-item-action ">Dapibus ac facilisis in</a> 
-                    <a href="#" class="list-group-item list-group-item-action ">Morbi leo risus</a>
-                    <a href="#" class="list-group-item list-group-item-action ">Porta ac consectetur ac</a>
-                    <a href="#" class="list-group-item list-group-item-action over">Vestibulum at eros</a>
-                </div>
-    
-                <div class="Details" style="display: none;">
-                    <h3>Details</h3>
-                    <p> This Voting is open until: </p>
-                    <form action="#">
-                        <div class="input-box">
-                            <input type="text" placeholder="Name" required="">
-                        </div>
-                        <div class="appointment option">
-                            <h2>some possible appointment options:</h2>
-                            <div class="checkbox">
-                                <div class="form-check form-check">
-                                    some time
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                                </div>
-                            <div class="form-check form-check">
-                                some time
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                            </div>
-                            </div>
-                        </div>
-                        <div class="input-box">
-                            <input type="text" placeholder="add a comment">
-                        </div>
-                        <button type="submit" class="btn">submit choice</button>
-                    </form>
-                    other users have voted ... placeholder
-                </div>
-    
-                <div class="newApp" style="display: none;">
-                    <h2>New Appointment</h2>
-                    <form action="#">
-                        <div class="input-box">
-                            <input type="text" placeholder="Name" required="">
-                        </div>
-                        <div class="input-box">
-    
-                            <input type="text" placeholder="Location" required="">
-                        </div>
-                        <div class="input-box">
-                            <input type="date" placeholder="Start Time" required="">
-                        </div>
-                        <div class="input-box">
-                            <input type="date" placeholder="End Time" required="">
-                        </div>
-                        <div class="input-box">
-                            <select>
-                                <option value="" disabled="" selected="">Choose an option</option>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
-                            </select>
-                        </div>
-                        <div class="input-box">
-                            <select>
-                                <option value="" disabled="" selected="">Choose an option</option>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn">Create</button>
-                    </form>
-                </div>
-                
-    
-        </div>
-    
-        <script src="myscript.js"></script>
-    
-    
-    
-    </body></html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Planer</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="navigation">
+        <a href="index.html">Home</a>
+        <a href="#" id="add-app-link">+</a>
+      </nav>
+    </header>
+
+    <div class="wrapper">
+      <div class="h2">
+        <h2><b>List of all Appointments</b></h2>
+      </div>
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action mylistitem"
+          >Cras justo odio
+        </a>
+        <a href="#" class="list-group-item list-group-item-action"
+          >Dapibus ac facilisis in</a
+        >
+        <a href="#" class="list-group-item list-group-item-action"
+          >Morbi leo risus</a
+        >
+        <a href="#" class="list-group-item list-group-item-action"
+          >Porta ac consectetur ac</a
+        >
+        <a href="#" class="list-group-item list-group-item-action over"
+          >Vestibulum at eros</a
+        >
+      </div>
+
+      <div class="Details" style="display: none">
+        <h3>Details</h3>
+        <p>This Voting is open until:</p>
+        <form action="#">
+          <div class="input-box">
+            <input type="text" placeholder="Name" required="" />
+          </div>
+          <div class="appointment option">
+            <h2>some possible appointment options:</h2>
+            <div class="checkbox">
+              <div class="form-check form-check">
+                some time
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="inlineCheckbox1"
+                  value="option1"
+                />
+              </div>
+              <div class="form-check form-check">
+                some time
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="inlineCheckbox1"
+                  value="option1"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="input-box">
+            <input type="text" placeholder="add a comment" />
+          </div>
+          <button type="submit" class="btn">submit choice</button>
+        </form>
+        other users have voted ... placeholder
+      </div>
+
+      <div class="newApp" style="display: none">
+        <h2>New Appointment</h2>
+        <form action="#">
+          <div class="input-box">
+            <input type="text" placeholder="Name" required="" />
+          </div>
+          <div class="input-box">
+            <input type="text" placeholder="Location" required="" />
+          </div>
+          <div class="input-box">
+            <input type="date" placeholder="Start Time" required="" />
+          </div>
+          <div class="input-box">
+            <input type="date" placeholder="End Time" required="" />
+          </div>
+          <div class="input-box">
+            <select>
+              <option value="" disabled="" selected="">Choose an option</option>
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+          </div>
+          <div class="input-box">
+            <select>
+              <option value="" disabled="" selected="">Choose an option</option>
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+          </div>
+          <button type="submit" class="btn">Create</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="./js/myscript.js"></script>
+  </body>
+</html>
