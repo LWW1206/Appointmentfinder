@@ -6,7 +6,8 @@ include("./models/voting.php");
 
 class DataHandler
 {
-
+  // =========================== READ ==============================================
+  
   public function queryAppointments()
   {
     include_once("dbaccess.php");
@@ -23,7 +24,7 @@ class DataHandler
     }
     return $res;
   }
-
+  
   public function queryAppointmentById($ap_id)
   {
     include_once("dbaccess.php");
@@ -95,4 +96,104 @@ class DataHandler
     }
     return $res;
   }
+  
+  // =========================== Create ==============================================
+
+  public function createNewAppointment($data)
+  {
+    include_once("dbaccess.php");
+    $res = array();
+    $sql = "INSERT INTO appointments (ap_name, `location`, `description`, vote_start, vote_end, creator_name) VALUES (?, ?, ?, ?, ?, ?);";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('ssssss', $data["ap_name"], $data["location"], $data["description"], $data["vote_start"], $data["vote_end"], $data["creator_name"]);
+    $stmt->execute();
+    array_push($res, "New appointment was added successfully.");
+    return $res;
+  }
+
+  public function createNewOption($data)
+  {
+    include_once("dbaccess.php");
+    $res = array();
+    $sql = "INSERT INTO `options` (ap_id, op_start, op_end) VALUES (?, ?, ?);";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('iss', $data["ap_id"], $data["op_start"], $data["op_end"]);
+    $stmt->execute();
+    array_push($res, "New option was added successfully.");
+    return $res;
+  }
+
+  public function createNewVoting($data)
+  {
+    include_once("dbaccess.php");
+    $res = array();
+    $sql = "INSERT INTO votings (ap_id, op_id, voter_name) VALUES (?, ?, ?);";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('iis', $data["ap_id"], $data["op_id"], $data["voter_name"]);
+    $stmt->execute();
+    array_push($res, "New voting was added successfully.");
+    return $res;
+  }
+
+  public function createNewComment($data)
+  {
+    include_once("dbaccess.php");
+    $res = array();
+    $sql = "INSERT INTO comments (ap_id, author_name, comment_text) VALUES (?, ?, ?);";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('iss', $data["ap_id"], $data["author_name"], $data["comment_text"]);
+    $stmt->execute();
+    array_push($res, "New comment was added successfully.");
+    return $res;
+  }
+  
+  // =========================== DELETE ==============================================
+
+  public function deleteAppointment($id)
+  {
+    include_once("dbaccess.php");
+    $res = array();
+    $sql = "DELETE FROM appointments WHERE ap_id = ?;";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    array_push($res, "Comment with id=" . $id . " was deleted successfully");
+    return $res;
+  }
+
+  // public function deleteOption($id)
+  // {
+  //   include_once("dbaccess.php");
+  //   $res = array();
+  //   $sql = "DELETE FROM options WHERE op_id = ?;";
+  //   $stmt = $mysqli->prepare($sql);
+  //   $stmt->bind_param('i', $id);
+  //   $stmt->execute();
+  //   array_push($res, "Comment with id=" . $id . " was deleted successfully");
+  //   return $res;
+  // }
+
+  // public function deleteVoting($id)
+  // {
+  //   include_once("dbaccess.php");
+  //   $res = array();
+  //   $sql = "DELETE FROM votings WHERE v_id = ?;";
+  //   $stmt = $mysqli->prepare($sql);
+  //   $stmt->bind_param('i', $id);
+  //   $stmt->execute();
+  //   array_push($res, "Comment with id=" . $id . " was deleted successfully");
+  //   return $res;
+  // }
+
+  // public function deleteComment($id)
+  // {
+  //   include_once("dbaccess.php");
+  //   $res = array();
+  //   $sql = "DELETE FROM comments WHERE c_id = ?;";
+  //   $stmt = $mysqli->prepare($sql);
+  //   $stmt->bind_param('i', $id);
+  //   $stmt->execute();
+  //   array_push($res, "Comment with id=" . $id . " was deleted successfully");
+  //   return $res;
+  // }
 }

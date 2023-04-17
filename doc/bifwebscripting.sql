@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 15. Apr 2023 um 11:02
+-- Erstellungszeit: 17. Apr 2023 um 12:47
 -- Server-Version: 10.4.25-MariaDB
 -- PHP-Version: 8.1.10
 
@@ -45,9 +45,9 @@ CREATE TABLE `appointments` (
 
 CREATE TABLE `comments` (
   `c_id` int(11) NOT NULL,
+  `ap_id` int(11) NOT NULL,
   `author_name` varchar(255) NOT NULL,
-  `comment_text` varchar(255) NOT NULL,
-  `ap_id` int(11) NOT NULL
+  `comment_text` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -105,8 +105,8 @@ ALTER TABLE `options`
 --
 ALTER TABLE `votings`
   ADD PRIMARY KEY (`v_id`),
-  ADD KEY `options` (`op_id`),
-  ADD KEY `appiontments2` (`ap_id`);
+  ADD KEY `appiontments2` (`ap_id`),
+  ADD KEY `options` (`op_id`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -144,20 +144,20 @@ ALTER TABLE `votings`
 -- Constraints der Tabelle `comments`
 --
 ALTER TABLE `comments`
-  ADD CONSTRAINT `appointments3` FOREIGN KEY (`ap_id`) REFERENCES `appointments` (`ap_id`);
+  ADD CONSTRAINT `appointments3` FOREIGN KEY (`ap_id`) REFERENCES `appointments` (`ap_id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `options`
 --
 ALTER TABLE `options`
-  ADD CONSTRAINT `appointment` FOREIGN KEY (`ap_id`) REFERENCES `appointments` (`ap_id`);
+  ADD CONSTRAINT `appointment` FOREIGN KEY (`ap_id`) REFERENCES `appointments` (`ap_id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `votings`
 --
 ALTER TABLE `votings`
-  ADD CONSTRAINT `appiontments2` FOREIGN KEY (`ap_id`) REFERENCES `appointments` (`ap_id`),
-  ADD CONSTRAINT `options` FOREIGN KEY (`op_id`) REFERENCES `options` (`op_id`);
+  ADD CONSTRAINT `appiontments2` FOREIGN KEY (`ap_id`) REFERENCES `appointments` (`ap_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `options` FOREIGN KEY (`op_id`) REFERENCES `options` (`op_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

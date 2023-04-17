@@ -27,6 +27,30 @@ class SimpleLogic
       case "queryAppointmentComments":
         $res = $this->dh->queryAppointmentComments($param);
         break;
+      case "createNewAppointment":
+        $res = $this->dh->createNewAppointment($param);
+        break;
+      case "createNewOption":
+        $res = $this->dh->createNewOption($param);
+        break;
+      case "createNewVoting":
+        $res = $this->dh->createNewVoting($param);
+        break;
+      case "createNewComment":
+        $res = $this->dh->createNewComment($param);
+        break;
+      case "deleteAppointment":
+        $res = $this->dh->deleteAppointment($param);
+        break;
+      // case "deleteOption":
+      //   $res = $this->dh->deleteOption($param);
+      //   break;
+      // case "deleteVoting":
+      //   $res = $this->dh->deleteVoting($param);
+      //   break;
+      // case "deleteComment":
+      //   $res = $this->dh->deleteComment($param);
+      //   break;
       default:
         $res = null;
         break;
