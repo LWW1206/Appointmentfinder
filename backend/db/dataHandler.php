@@ -42,7 +42,6 @@ class DataHandler
     }
     return $res;
   }
-
   /*
   public function queryAppointmentIdByName($name)
 {

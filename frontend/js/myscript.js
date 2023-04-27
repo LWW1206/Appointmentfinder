@@ -10,10 +10,14 @@ $(document).ready(function () {
     event.preventDefault(); // Prevent default form submit action.
     savetoDatabase();
   });
+  $('#vote-form').on('submit', function(event) {
+    event.preventDefault(); // Prevent default form submit action.
+    voting();
+  });
   $('#del-btn').on('click', function(element) {
     let app_id = parseInt($("#detail-id").text());
     deletedata("deleteAppointment", app_id);
-  });
+  }); 
 });
 
 const addOptionBtn = document.querySelector("#add-option-btn");
@@ -43,7 +47,9 @@ function showdetails(element) {
     dataType: "json",
     success: function (response) {
       addOptionToDetails(appointmentId);
+      AppendMostVoted(appointmentId);
       console.log("Appointment details: ", response);
+      
       var appointment = response[0];
       $('#detail-id').append(appointment.id);
       $('#detail-name').append(appointment.name);
@@ -69,6 +75,22 @@ function showdetails(element) {
 }
 }
 
+function AppendMostVoted(id){
+  $.ajax({
+    type: "GET",
+    url: "../backend/serviceHandler.php",
+    cache: false,
+    data: { method: "queryAppointmentVotes", param: id },
+    dataType: "json",
+    success: function (response) {
+      console.log("Votings: ",response);
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  })
+}
+
 function addOptionToDetails(id) {
   $.ajax({
     type: "POST",
@@ -83,14 +105,17 @@ function addOptionToDetails(id) {
       $.each(options, function (i, option) {
         var start = option.start;
         var end = option.end;
+        var id = option.op_id;
         console.log(start);
         console.log(end);
+        console.log(id);
         var optionItem = $('<div>').addClass('form-check');
         var label = $('<label>').addClass('form-check-label').text(start + ' to ' + end);
         var input = $('<input>').addClass('form-check-input').attr({
           type: 'checkbox',
           name: 'option',
-          value: start + ' to ' + end
+          value: start + ' to ' + end,
+          'data-id': id,
         });
         optionItem.append(input).append(label);
         optionDiv.append(optionItem);
@@ -144,6 +169,45 @@ function savetoDatabase() {
       console.log(err);
     }
   });
+}
+
+function voting(){
+  var appointmentId = parseInt($('#detail-id').text());
+  var name = document.getElementById('voter').value;
+  var selectedOptions = [];
+  $('input[name="option"]:checked').each(function () {
+    selectedOptions.push($(this).data('id'));
+  });
+  //console.log(appointmentId);
+  //console.log(name);
+  //console.log(selectedOptions);
+  if(selectedOptions.length > 0){
+    for (var i = 0; i < selectedOptions.length; i++) {
+      var data = {
+        ap_id: appointmentId,
+        op_id: selectedOptions[i],
+        voter_name : name,
+      };
+      $.ajax({
+        type: "POST",
+        url: "../backend/serviceHandler.php",
+        cache: false,
+        data: { method: "createNewVoting", param: data },
+        dataType: "json",
+        success: function (response) {
+          console.log(response);
+          alert("Your vote has been saved successfully!");
+          window.location.reload();
+        },
+        error: function (err) {
+          console.log(err);
+        }
+      });
+    }
+  }
+  else {
+    alert("Please tick atleast one option")
+  }
 }
 
 function saveOptions(ap_id) {
