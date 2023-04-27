@@ -11,7 +11,7 @@ $(document).ready(function () {
     savetoDatabase();
   });
 $('#del-btn').on('click', function() {
-    let app_id = parseInt($("#detail-id").text());
+    let app_id = parseInt($("#detail-id").text()); //parse as int
     deletedata("deleteAppointment", app_id);
 });
 $('#vote-comment').on('click', function() {
@@ -20,19 +20,19 @@ $('#vote-comment').on('click', function() {
   });
 });
 
-const addOptionBtn = document.querySelector("#add-option-btn");
+const addOptionBtn = document.querySelector("#add-option-btn"); //get button
 const form = document.querySelector("#appointment-form");
 
 addOptionBtn.addEventListener("click", () => {
   //console.log("in here");
-  const newInput = document.createElement("div");
+  const newInput = document.createElement("div"); // create div and input html 
   newInput.innerHTML = `
   <div class="row" id = "option-row">
   <div class="input-box col"> <input type="datetime-local" id="option-start" name="option-start" required> </div>
   <div class="input-box col"> <input type="datetime-local" id="option-end" name="option-end" required> </div>
   </div>
   `;
-  form.insertBefore(newInput, addOptionBtn);
+  form.insertBefore(newInput, addOptionBtn); // insert before the button
 });
 
 function showdetails(element) {
@@ -47,10 +47,10 @@ function showdetails(element) {
     dataType: "json",
     success: function (response) {
       addOptionToDetails(appointmentId);
-      AppendMostVoted(appointmentId);
-    //   console.log("Appointment details: ", response);
-      
-      var appointment = response[0];
+      Votes(appointmentId);
+      //   console.log("Appointment details: ", response);
+      // add the details into the prepared spans
+      var appointment = response[0]; 
       $('#detail-id').append(appointment.id);
       $('#detail-name').append(appointment.name);
       $('#detail-location').append(appointment.location);
@@ -58,16 +58,16 @@ function showdetails(element) {
       $('#detail-start').append(appointment.vote_start);
       $('#detail-end').append(appointment.vote_end);
       $('#detail-creator').append(appointment.creator);
-
+      //hide other parts and show only the details
       $('.wrapper > .h2').hide();
       $('.list-group').hide();
       $('.Details').show();
-
+      // if the appointment has the class "over" then disable the inputs
       if ($('.mylistitem[data-id="' + appointmentId + '"]').hasClass('over')) {
         $('form input').prop('disabled', true);
         $('form button').prop('disabled', true);
       }
-      loadComments()
+      loadComments() 
     },
     error: function (err) {
       console.log(err);
@@ -76,7 +76,7 @@ function showdetails(element) {
 }
 }
 
-function AppendMostVoted(id){
+function Votes(id){
   $.ajax({
     type: "GET",
     url: "../backend/serviceHandler.php",
@@ -84,7 +84,7 @@ function AppendMostVoted(id){
     data: { method: "queryAppointmentVotes", param: id },
     dataType: "json",
     success: function (response) {
-      console.log("Votings: ",response);
+      console.log("Votings: ",response); // displaying votings for appointment in console
     },
     error: function (err) {
       console.log(err);
@@ -92,7 +92,7 @@ function AppendMostVoted(id){
   })
 }
 
-function addOptionToDetails(id) {
+function addOptionToDetails(id) { // adding the voteable timeslots to the details
   $.ajax({
     type: "POST",
     url: "../backend/serviceHandler.php",
@@ -103,27 +103,27 @@ function addOptionToDetails(id) {
     //   console.log(response);
       var options = response;
       var optionDiv = $('<div>').addClass('option-div');
-      $.each(options, function (i, option) {
+      $.each(options, function (i, option) { //add for each option with given appointment - id
         var start = option.start;
         var end = option.end;
         var id = option.op_id;
         // console.log(start);
         // console.log(end);
         // console.log(id);
-        var optionItem = $('<div>').addClass('form-check');
+        var optionItem = $('<div>').addClass('form-check'); //adding them as checkbox
         var label = $('<label>').addClass('form-check-label').text(start + ' to ' + end);
         var input = $('<input>').addClass('form-check-input').attr({
             "data-optid": option.op_id,
           type: 'checkbox',
           name: 'option',
           value: start + ' to ' + end,
-          'data-id': id,
+          'data-id': id, //giving them their id as custom attribute for votings
         });
         optionItem.append(input).append(label);
         optionDiv.append(optionItem);
       });
-      $('.appointment.option').html('<h2>voteable appointment options:</h2>');
-      $('.appointment.option').append(optionDiv);
+      $('.appointment.option').html('<h2>voteable appointment options:</h2>'); // print a header
+      $('.appointment.option').append(optionDiv); // append the created divs
     },
     error: function (err) {
       console.log(err);
@@ -131,22 +131,22 @@ function addOptionToDetails(id) {
   });
 }
 
-$('#add-app-link').on('click', function () {
+$('#add-app-link').on('click', function () { //when click on "+" then hide everything else and only show the + new Application Window
   $('.wrapper > .h2').hide();
   $('.list-group').hide();
   $('.Details').hide();
   $('.newApp').show();
 });
 
-function savetoDatabase() {
-  var name = document.getElementById('name').value;
+function savetoDatabase() { // saves data from the create app Form into the database
+  var name = document.getElementById('name').value; // gets the values from the input fields
   var location = document.getElementById('location').value;
   var description = document.getElementById('description').value;
   var start = document.getElementById('start').value;
   var end = document.getElementById('end').value;
   var creator = document.getElementById('creator').value;
 
-  var data = {
+  var data = { //passes them as an object
     ap_name: name,
     location: location,
     description: description,
@@ -164,8 +164,8 @@ function savetoDatabase() {
     //   console.log("Response: ", response);
         alert("Appointment saved successfully!");
         var ap_id = response[1]; // get the last insert ID from the response
-        saveOptions(ap_id);
-        window.location.reload();
+        saveOptions(ap_id); // also save the given time slot options into the Options table
+        window.location.reload(); //back index.html
     },
     error: function (err) {
       console.log(err);
@@ -174,16 +174,16 @@ function savetoDatabase() {
 }
 
 function voting(){
-  var appointmentId = parseInt($('#detail-id').text());
-  var name = document.getElementById('voter').value;
+  var appointmentId = parseInt($('#detail-id').text()); // get appointment id
+  var name = document.getElementById('voter').value; // get name entered 
   var selectedOptions = [];
-  $('input[name="option"]:checked').each(function () {
+  $('input[name="option"]:checked').each(function () { // array of all checked options ids
     selectedOptions.push($(this).data('id'));
   });
   //console.log(appointmentId);
   //console.log(name);
   //console.log(selectedOptions);
-  if(selectedOptions.length > 0){
+  if(selectedOptions.length > 0){ //if atleast one is selected
     for (var i = 0; i < selectedOptions.length; i++) {
       var data = {
         ap_id: appointmentId,
@@ -210,12 +210,12 @@ function voting(){
   else {
     alert("Please tick atleast one option")
   }
-  $("#voter").val("")
+  $("#voter").val("") //set back to empty
 }
 
-function saveOptions(ap_id) {
-  let rows = document.querySelectorAll("#option-row");
-  rows.forEach(function (row) {
+function saveOptions(ap_id) { //saving options
+  let rows = document.querySelectorAll("#option-row"); //get all option-rows
+  rows.forEach(function (row) { //for each row save into database 
     let start_op = row.querySelector("#option-start").value;
     let end_op = row.querySelector("#option-end").value;
     const data = {
@@ -240,7 +240,7 @@ function saveOptions(ap_id) {
 }
 
 
-function getAppointments() {
+function getAppointments() { //display all appointments in a list
   $.ajax({
     type: "POST",
     url: "../backend/serviceHandler.php",
@@ -251,11 +251,11 @@ function getAppointments() {
     //   console.log("Appointments: ", response)
       var appointments = response;
       var listGroup = $('.list-group');
-      var currentDate = new Date();
+      var currentDate = new Date(); // get current time to compare with vote-end date 
       $.each(appointments, function(i, appointment) {
         var listItem = $('<a>').attr({
           href: '#',
-          class: 'list-group-item list-group-item-action mylistitem' + (currentDate > new Date(appointment.vote_end) ? ' over' : ''),
+          class: 'list-group-item list-group-item-action mylistitem' + (currentDate > new Date(appointment.vote_end) ? ' over' : ''), //check if vote end date is already passed
           'data-id': appointment.id,
         }).text(appointment.name);
         // console.log(appointment.id);
