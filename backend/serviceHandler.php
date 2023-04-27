@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
   $logic = new SimpleLogic();
   $result = $logic->handleRequest($method, $param);
-  if ($result == null) {
+  if ($result === null) {
     response("GET", 400, null);
   } else {
     response("GET", 200, $result);
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $logic = new SimpleLogic();
   $result = $logic->handleRequest($method, $param);
-  if ($result == null) {
+  if ($result === null) {
     response("POST", 400, null);
   } else {
     response("POST", 200, $result);
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
   $method = $data["method"];
   $param = $data["param"];
   $result = $logic->handleRequest($method, $param);
-  if ($result == null) {
+  if ($result === null) {
     response("DELETE", 400, null);
   } else {
     response("DELETE", 200, $result);
