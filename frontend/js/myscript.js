@@ -10,14 +10,14 @@ $(document).ready(function () {
     event.preventDefault(); // Prevent default form submit action.
     savetoDatabase();
   });
-  $('#vote-form').on('submit', function(event) {
-    event.preventDefault(); // Prevent default form submit action.
-    voting();
-  });
-  $('#del-btn').on('click', function(element) {
+$('#del-btn').on('click', function() {
     let app_id = parseInt($("#detail-id").text());
     deletedata("deleteAppointment", app_id);
-  }); 
+});
+$('#vote-comment').on('click', function() {
+    comment();
+    voting();
+  });
 });
 
 const addOptionBtn = document.querySelector("#add-option-btn");
@@ -67,6 +67,7 @@ function showdetails(element) {
         $('form input').prop('disabled', true);
         $('form button').prop('disabled', true);
       }
+      loadComments()
     },
     error: function (err) {
       console.log(err);
@@ -112,6 +113,7 @@ function addOptionToDetails(id) {
         var optionItem = $('<div>').addClass('form-check');
         var label = $('<label>').addClass('form-check-label').text(start + ' to ' + end);
         var input = $('<input>').addClass('form-check-input').attr({
+            "data-optid": option.op_id,
           type: 'checkbox',
           name: 'option',
           value: start + ' to ' + end,
@@ -196,7 +198,7 @@ function voting(){
         dataType: "json",
         success: function (response) {
           console.log(response);
-          alert("Your vote has been saved successfully!");
+        // alert("Your vote has been saved successfully!");
           window.location.reload();
         },
         error: function (err) {
@@ -208,6 +210,7 @@ function voting(){
   else {
     alert("Please tick atleast one option")
   }
+  $("#voter").val("")
 }
 
 function saveOptions(ap_id) {
@@ -269,7 +272,7 @@ function getAppointments() {
 
 function loaddata(searchmethode, searchterm, itemtype) {
   $.ajax({
-    type: "DELETE",
+    type: "GET",
     url: "../backend/serviceHandler.php",
     cache: false,
     data: { method: searchmethode, param: searchterm },
@@ -317,4 +320,49 @@ function deletedata(searchmethode, searchterm){
       console.log(err);
     }
   });
+}
+
+function loadComments(){
+    let app_id = parseInt($("#detail-id").text());
+    $.ajax({
+        type: "GET",
+        url: "../backend/serviceHandler.php",
+        cache: false,
+        data: { method: "queryAppointmentComments", param: app_id },
+        dataType: "json",
+        success: function (response) {
+        $("#list-comments").children().remove()  
+          response.forEach(el => {
+            if (el) {
+              $("#list-comments").append($("<p>")).append($("<strong>").text(el.author + ": ")).append($("<span>").text(el.text));
+            }
+          });
+        }
+      });
+}
+
+function comment(){
+    let app_id = parseInt($("#detail-id").text());
+    let voterName = $("#voter").val()
+    let commentText = $("#voter-comment").val()
+    let votes = $("input:checked").toArray()
+    console.log("checked", votes)
+    
+    if (commentText != "" && voterName != ""){
+        $.ajax({
+            type: "POST",
+            url: "../backend/serviceHandler.php",
+            cache: false,
+            data: { method: "createNewComment", param: {"ap_id": app_id, "author_name": voterName, "comment_text": commentText} },
+            dataType: "json",
+            success: function (response) {
+                loadComments()
+            },
+            error: function (err){
+              console.log(err);
+            }
+          });
+    }
+    $("#voter-comment").val("")
+    
 }

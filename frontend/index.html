@@ -25,14 +25,7 @@
       <div class="h2">
         <h2><b>List of all Appointments</b></h2>
       </div>
-      <div class="list-group" id="appointments-list">
-        <a href="#" class="list-group-item list-group-item-action mylistitem"
-          >Cras justo odio
-        </a>
-        <a href="#" class="list-group-item list-group-item-action over"
-          >Vestibulum at eros</a>
-      </div>
-
+      <div class="list-group" id="appointments-list"></div>
       <div class="Details" style="display: none">
         <h3>Details</h3>
         <span id="detail-id" hidden></span>
@@ -46,14 +39,15 @@
           <div class="input-box">
             <input type="text" placeholder="Name" id="voter" required="" />
           </div>
-          <div class="appointment option">
-            
-          </div>
+          <h3>Options:</h3>
+          <div class="appointment option"></div>
+          <h3>Comments:</h3>
+          <div id="list-comments"></div>
           <div class="input-box">
-            <input type="text" placeholder="add a comment" />
+            <input id="voter-comment" type="text" placeholder="add a comment" />
           </div>
-          <button type="submit" class="btn">submit choice</button>
-          <button id="del-btn" type="button" class="btn">delete Appointment</button>
+          <button id="vote-comment" type="button" class="btn">Submit</button>
+          <button id="del-btn" type="button" class="btn">Delete</button>
         </form>
         <div id="box">
 
