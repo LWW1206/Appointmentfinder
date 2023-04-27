@@ -37,7 +37,7 @@ addOptionBtn.addEventListener("click", () => {
 
 function showdetails(element) {
   var appointmentId = $(element).data('id'); // use the passed element to get data-id
-  console.log("Appointment ID: ", appointmentId);
+//   console.log("Appointment ID: ", appointmentId);
   if(appointmentId != null) {
   $.ajax({
     type: "POST",
@@ -48,7 +48,7 @@ function showdetails(element) {
     success: function (response) {
       addOptionToDetails(appointmentId);
       AppendMostVoted(appointmentId);
-      console.log("Appointment details: ", response);
+    //   console.log("Appointment details: ", response);
       
       var appointment = response[0];
       $('#detail-id').append(appointment.id);
@@ -100,16 +100,16 @@ function addOptionToDetails(id) {
     data: { method: "queryAppointmentOptions", param: id },
     dataType: "json",
     success: function (response) {
-      console.log(response);
+    //   console.log(response);
       var options = response;
       var optionDiv = $('<div>').addClass('option-div');
       $.each(options, function (i, option) {
         var start = option.start;
         var end = option.end;
         var id = option.op_id;
-        console.log(start);
-        console.log(end);
-        console.log(id);
+        // console.log(start);
+        // console.log(end);
+        // console.log(id);
         var optionItem = $('<div>').addClass('form-check');
         var label = $('<label>').addClass('form-check-label').text(start + ' to ' + end);
         var input = $('<input>').addClass('form-check-input').attr({
@@ -161,7 +161,7 @@ function savetoDatabase() {
     data: { method: "createNewAppointment", param: data },
     dataType: "json",
     success: function (response) {
-      console.log("Response: ", response);
+    //   console.log("Response: ", response);
         alert("Appointment saved successfully!");
         var ap_id = response[1]; // get the last insert ID from the response
         saveOptions(ap_id);
@@ -197,7 +197,7 @@ function voting(){
         data: { method: "createNewVoting", param: data },
         dataType: "json",
         success: function (response) {
-          console.log(response);
+        //   console.log(response);
         // alert("Your vote has been saved successfully!");
           window.location.reload();
         },
@@ -230,7 +230,7 @@ function saveOptions(ap_id) {
       data: { method: "createNewOption", param: data },
       dataType: "json",
       success: function (response) {
-        console.log("Response: ", response);
+        // console.log("Response: ", response);
       },
       error: function (err) {
         console.log(err);
@@ -248,7 +248,7 @@ function getAppointments() {
     data: { method: "queryAppointments" },
     dataType: "json",
     success: function (response) {
-      console.log("Appointments: ", response)
+    //   console.log("Appointments: ", response)
       var appointments = response;
       var listGroup = $('.list-group');
       var currentDate = new Date();
@@ -258,8 +258,8 @@ function getAppointments() {
           class: 'list-group-item list-group-item-action mylistitem' + (currentDate > new Date(appointment.vote_end) ? ' over' : ''),
           'data-id': appointment.id,
         }).text(appointment.name);
-        console.log(appointment.id);
-        console.log(appointment.name);
+        // console.log(appointment.id);
+        // console.log(appointment.name);
         listGroup.append(listItem);
       });
     },
@@ -278,7 +278,7 @@ function loaddata(searchmethode, searchterm, itemtype) {
     data: { method: searchmethode, param: searchterm },
     dataType: "json",
     success: function (response) {
-      console.log("Response: ", response)
+    //   console.log("Response: ", response)
       response.forEach(el => {
         if (el) {
           console.log(el)
@@ -297,7 +297,7 @@ function writedata(searchmethode, searchterm){
     data: { method: searchmethode, param: searchterm },
     dataType: "json",
     success: function (response) {
-      console.log("Response: ", response)
+    //   console.log("Response: ", response)
     },
     error: function (err){
       console.log(err);
@@ -313,7 +313,7 @@ function deletedata(searchmethode, searchterm){
     data: { method: searchmethode, param: searchterm },
     dataType: "json",
     success: function (response) {
-      console.log("Response: ", response)
+    //   console.log("Response: ", response)
       window.location.replace("index.html");
     },
     error: function (err){
@@ -346,7 +346,7 @@ function comment(){
     let voterName = $("#voter").val()
     let commentText = $("#voter-comment").val()
     let votes = $("input:checked").toArray()
-    console.log("checked", votes)
+    // console.log("checked", votes)
     
     if (commentText != "" && voterName != ""){
         $.ajax({

@@ -176,40 +176,4 @@ class DataHandler
     array_push($res, "Comment with id=" . $id . " was deleted successfully");
     return $res;
   }
-
-  // public function deleteOption($id)
-  // {
-  //   include_once("dbaccess.php");
-  //   $res = array();
-  //   $sql = "DELETE FROM options WHERE op_id = ?;";
-  //   $stmt = $mysqli->prepare($sql);
-  //   $stmt->bind_param('i', $id);
-  //   $stmt->execute();
-  //   array_push($res, "Comment with id=" . $id . " was deleted successfully");
-  //   return $res;
-  // }
-
-  // public function deleteVoting($id)
-  // {
-  //   include_once("dbaccess.php");
-  //   $res = array();
-  //   $sql = "DELETE FROM votings WHERE v_id = ?;";
-  //   $stmt = $mysqli->prepare($sql);
-  //   $stmt->bind_param('i', $id);
-  //   $stmt->execute();
-  //   array_push($res, "Comment with id=" . $id . " was deleted successfully");
-  //   return $res;
-  // }
-
-  // public function deleteComment($id)
-  // {
-  //   include_once("dbaccess.php");
-  //   $res = array();
-  //   $sql = "DELETE FROM comments WHERE c_id = ?;";
-  //   $stmt = $mysqli->prepare($sql);
-  //   $stmt->bind_param('i', $id);
-  //   $stmt->execute();
-  //   array_push($res, "Comment with id=" . $id . " was deleted successfully");
-  //   return $res;
-  // }
 }

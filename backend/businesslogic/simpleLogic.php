@@ -42,15 +42,6 @@ class SimpleLogic
       case "deleteAppointment":
         $res = $this->dh->deleteAppointment($param);
         break;
-      // case "deleteOption":
-      //   $res = $this->dh->deleteOption($param);
-      //   break;
-      // case "deleteVoting":
-      //   $res = $this->dh->deleteVoting($param);
-      //   break;
-      // case "deleteComment":
-      //   $res = $this->dh->deleteComment($param);
-      //   break;
       default:
         $res = null;
         break;
