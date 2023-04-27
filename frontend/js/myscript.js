@@ -10,6 +10,10 @@ $(document).ready(function () {
     event.preventDefault(); // Prevent default form submit action.
     savetoDatabase();
   });
+  $('#del-btn').on('click', function(element) {
+    let app_id = parseInt($("#detail-id").text());
+    deletedata("deleteAppointment", app_id);
+  });
 });
 
 const addOptionBtn = document.querySelector("#add-option-btn");
@@ -41,6 +45,7 @@ function showdetails(element) {
       addOptionToDetails(appointmentId);
       console.log("Appointment details: ", response);
       var appointment = response[0];
+      $('#detail-id').append(appointment.id);
       $('#detail-name').append(appointment.name);
       $('#detail-location').append(appointment.location);
       $('#detail-description').append(appointment.description);
@@ -242,6 +247,7 @@ function deletedata(searchmethode, searchterm){
     dataType: "json",
     success: function (response) {
       console.log("Response: ", response)
+      window.location.replace("index.html");
     },
     error: function (err){
       console.log(err);
