@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  console.log("WTF");
   $('.Details').hide();
   $('.newApp').hide();
   getAppointments();
@@ -9,6 +10,17 @@ $(document).ready(function () {
     event.preventDefault(); // Prevent default form submit action.
     savetoDatabase();
   });
+});
+
+const addOptionBtn = document.querySelector("#add-option-btn");
+const optionContainer = document.querySelector("#appointment-form");
+
+addOptionBtn.addEventListener("click", () => {
+  console.log("in here");
+  const newInput = document.createElement("div");
+  newInput.classList.add("input-box");
+  newInput.innerHTML = '<input type="text" placeholder="Option" name="option" required>';
+  optionContainer.appendChild(newInput);
 });
 
 function showdetails(element) {

@@ -122,7 +122,9 @@ class DataHandler
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param('ssssss', $data["ap_name"], $data["location"], $data["description"], $data["vote_start"], $data["vote_end"], $data["creator_name"]);
     $stmt->execute();
+    $lastInsertId = mysqli_insert_id($mysqli);
     array_push($res, "New appointment was added successfully.");
+    array_push($res, $lastInsertId);
     return $res;
   }
 

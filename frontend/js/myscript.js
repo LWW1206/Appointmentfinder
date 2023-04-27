@@ -1,26 +1,36 @@
 $(document).ready(function () {
+  //console.log("WTF");
   $('.Details').hide();
   $('.newApp').hide();
   getAppointments();
-  const startInput = document.getElementById("start");
-  const endInput = document.getElementById("end");
-  startInput.addEventListener("change", generateRecommendations);
-  endInput.addEventListener("change", generateRecommendations);
   $('.list-group').on('click', '.list-group-item', function () {
-    showdetails();
-  });
+    showdetails(this); // pass the clicked element as a parameter
+  });  
   $('#appointment-form').on('submit', function(event) {
     event.preventDefault(); // Prevent default form submit action.
     savetoDatabase();
   });
 });
 
-function showdetails() {
-  $('.wrapper > .h2').hide();
-  $('.list-group').hide();
-  $('.Details').show();
+const addOptionBtn = document.querySelector("#add-option-btn");
+const form = document.querySelector("#appointment-form");
 
-  var appointmentId = $(this).data('id');
+addOptionBtn.addEventListener("click", () => {
+  //console.log("in here");
+  const newInput = document.createElement("div");
+  newInput.innerHTML = `
+  <div class="row" id = "option-row">
+  <div class="input-box col"> <input type="datetime-local" id="option-start" name="option-start" required> </div>
+  <div class="input-box col"> <input type="datetime-local" id="option-end" name="option-end" required> </div>
+  </div>
+  `;
+  form.insertBefore(newInput, addOptionBtn);
+});
+
+function showdetails(element) {
+  var appointmentId = $(element).data('id'); // use the passed element to get data-id
+  console.log("Appointment ID: ", appointmentId);
+  if(appointmentId != null) {
   $.ajax({
     type: "POST",
     url: "../backend/serviceHandler.php",
@@ -28,23 +38,66 @@ function showdetails() {
     data: { method: "queryAppointmentById", param: appointmentId },
     dataType: "json",
     success: function (response) {
+      addOptionToDetails(appointmentId);
       console.log("Appointment details: ", response);
-      var appointment = response;
-      $('#detail-name').append(appointment.ap_name);
+      var appointment = response[0];
+      $('#detail-name').append(appointment.name);
       $('#detail-location').append(appointment.location);
       $('#detail-description').append(appointment.description);
       $('#detail-start').append(appointment.vote_start);
       $('#detail-end').append(appointment.vote_end);
-      $('#detail-creator').append(appointment.creator_name);
+      $('#detail-creator').append(appointment.creator);
+
+      $('.wrapper > .h2').hide();
+      $('.list-group').hide();
       $('.Details').show();
-      $('.newApp').hide();
+
+      if ($('.mylistitem[data-id="' + appointmentId + '"]').hasClass('over')) {
+        $('form input').prop('disabled', true);
+        $('form button').prop('disabled', true);
+      }
     },
     error: function (err) {
       console.log(err);
     }
   });
 }
+}
 
+function addOptionToDetails(id) {
+  $.ajax({
+    type: "POST",
+    url: "../backend/serviceHandler.php",
+    cache: false,
+    data: { method: "queryAppointmentOptions", param: id },
+    dataType: "json",
+    success: function (response) {
+      console.log(response);
+      var options = response;
+      var optionDiv = $('<div>').addClass('option-div');
+      $.each(options, function (i, option) {
+        var start = option.start;
+        var end = option.end;
+        console.log(start);
+        console.log(end);
+        var optionItem = $('<div>').addClass('form-check');
+        var label = $('<label>').addClass('form-check-label').text(start + ' to ' + end);
+        var input = $('<input>').addClass('form-check-input').attr({
+          type: 'checkbox',
+          name: 'option',
+          value: start + ' to ' + end
+        });
+        optionItem.append(input).append(label);
+        optionDiv.append(optionItem);
+      });
+      $('.appointment.option').html('<h2>voteable appointment options:</h2>');
+      $('.appointment.option').append(optionDiv);
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  });
+}
 
 $('#add-app-link').on('click', function () {
   $('.wrapper > .h2').hide();
@@ -60,13 +113,14 @@ function savetoDatabase() {
   var start = document.getElementById('start').value;
   var end = document.getElementById('end').value;
   var creator = document.getElementById('creator').value;
+
   var data = {
     ap_name: name,
     location: location,
     description: description,
     vote_start: start,
     vote_end: end,
-    creator_name: creator
+    creator_name: creator,
   };
   $.ajax({
     type: "POST",
@@ -76,17 +130,10 @@ function savetoDatabase() {
     dataType: "json",
     success: function (response) {
       console.log("Response: ", response);
-      var appointmentId = response.appointmentId;
-      alert("Appointment saved successfully!");
-      window.location.reload();
-
-      const recommendations = document.querySelectorAll(".recommendations-list li");
-      const recommendationsArray = [];
-      recommendations.forEach(recommendation => {
-        recommendationsArray.push(recommendation.textContent);
-      });
-      //console.log(recommendationsArray);
-      saveOptions(appointmentId, recommendationsArray);
+        alert("Appointment saved successfully!");
+        var ap_id = response[1]; // get the last insert ID from the response
+        saveOptions(ap_id);
+        window.location.reload();
     },
     error: function (err) {
       console.log(err);
@@ -94,27 +141,15 @@ function savetoDatabase() {
   });
 }
 
-function saveOptions(appointmentId, recommendationsArray) {
-  console.log("in saveOptions");
-  const startDates = [];
-  const endDates = [];
-  for (const str of recommendationsArray) {
-    const [startDateStr, startTimeStr, endDateStr, endTimeStr] = str.split(/[\s,-]+/);
-    const startDateTimeStr = `${startDateStr.split('.').reverse().join('-')} ${startTimeStr}`;
-    const endDateTimeStr = `${endDateStr.split('.').reverse().join('-')} ${endTimeStr}`;
-    startDates.push(startDateTimeStr);
-    endDates.push(endDateTimeStr);
-  }
-  console.log(startDates);
-  console.log(endDates);
-  for(var i = 0; i < startDates.length; i++){
-    console.log(appointmentId),
-    console.log(startDates[i]),
-    console.log(endDates[i])
-    var data = {
-      ap_id: appointmentId, // pass the auto-incremented appointment ID here
-      op_start: startDates[i],
-      op_end: endDates[i],
+function saveOptions(ap_id) {
+  let rows = document.querySelectorAll("#option-row");
+  rows.forEach(function (row) {
+    let start_op = row.querySelector("#option-start").value;
+    let end_op = row.querySelector("#option-end").value;
+    const data = {
+      ap_id: ap_id,
+      op_start: start_op,
+      op_end: end_op,
     };
     $.ajax({
       type: "POST",
@@ -124,83 +159,14 @@ function saveOptions(appointmentId, recommendationsArray) {
       dataType: "json",
       success: function (response) {
         console.log("Response: ", response);
-        alert("Option saved successfully!");
       },
       error: function (err) {
         console.log(err);
       }
     });
-  }
+  });
 }
 
-
-let recommendationsContainer = null;
-
-function generateRecommendations() {
-  const startTime = new Date(document.getElementById("start").value);
-  const endTime = new Date(document.getElementById("end").value);
-  const duration = (endTime - startTime) / (1000 * 60); // duration in minutes
-
-  if (isNaN(startTime) || isNaN(endTime) || endTime <= startTime) {
-    return;
-  }
-  if (recommendationsContainer) {
-    recommendationsContainer.remove();
-  }
-
-  recommendationsContainer = document.createElement("div");
-  recommendationsContainer.classList.add("recommendations-container");
-
-  const recommendationsHeader = document.createElement("h3");
-  recommendationsHeader.textContent = "Recommended appointment times:";
-
-  const recommendationsList = document.createElement("ul");
-  recommendationsList.classList.add("recommendations-list");
-
-  let count = 0;
-  while (count < 3) {
-    const offset = Math.floor(Math.random() * duration);
-    const recommendationTime = new Date(startTime.getTime() + (offset * 60000));
-    const endTimeFormatted = new Date(recommendationTime.getTime() + (3 * 60 * 60 * 1000));
-    const startTimeFormatted = recommendationTime.toLocaleString('de-DE');
-    const endTimeFormattedString = endTimeFormatted.toLocaleString('de-DE');
-
-    if (recommendationTime <= endTime) {
-      const recommendationItem = document.createElement("li");
-      recommendationItem.innerHTML = `<span>${startTimeFormatted} - ${endTimeFormattedString}</span>`;
-      recommendationsList.appendChild(recommendationItem);
-      count++;
-    }
-  }
-  recommendationsContainer.appendChild(recommendationsHeader);
-  recommendationsContainer.appendChild(recommendationsList);
-
-  const newAppForm = document.getElementById("appointment-form");
-  newAppForm.insertBefore(recommendationsContainer, newAppForm.lastElementChild);
-}
-
-//['25.4.2023, 23:57:00 - 26.4.2023, 02:57:00', '28.4.2023, 19:15:00 - 28.4.2023, 22:15:00', '28.4.2023, 14:18:00 - 28.4.2023, 17:18:00']
-/*const arr = ['25.4.2023, 23:57:00 - 26.4.2023, 02:57:00', '28.4.2023, 19:15:00 - 28.4.2023, 22:15:00', '28.4.2023, 14:18:00 - 28.4.2023, 17:18:00'];
-
-const startDates = [];
-const endDates = [];
-
-for (const str of arr) {
-  const [startDateStr, startTimeStr, endDateStr, endTimeStr] = str.split(/[\s,-]+/);
-  const startDateTimeStr = `${startDateStr.split('.').reverse().join('-')} ${startTimeStr}`;
-  const endDateTimeStr = `${endDateStr.split('.').reverse().join('-')} ${endTimeStr}`;
-  startDates.push(startDateTimeStr);
-  endDates.push(endDateTimeStr);
-}
-
-console.log(startDates);
-console.log(endDates);
-
-Output:
-["2023-4-25 23:57:00", "2023-4-28 19:15:00", "2023-4-28 14:18:00"]
-["2023-4-26 02:57:00", "2023-4-28 22:15:00", "2023-4-28 17:18:00"]
-
-*/
 
 function getAppointments() {
   $.ajax({
@@ -213,15 +179,15 @@ function getAppointments() {
       console.log("Appointments: ", response)
       var appointments = response;
       var listGroup = $('.list-group');
-      //listGroup.empty();
+      var currentDate = new Date();
       $.each(appointments, function(i, appointment) {
         var listItem = $('<a>').attr({
           href: '#',
-          class: 'list-group-item list-group-item-action mylistitem',
+          class: 'list-group-item list-group-item-action mylistitem' + (currentDate > new Date(appointment.vote_end) ? ' over' : ''),
           'data-id': appointment.id,
         }).text(appointment.name);
-        //console.log(appointment.id);
-        //console.log(appointment.name);
+        console.log(appointment.id);
+        console.log(appointment.name);
         listGroup.append(listItem);
       });
     },
@@ -230,6 +196,7 @@ function getAppointments() {
     }
   });
 }
+
 
 function loaddata(searchmethode, searchterm, itemtype) {
   $.ajax({
