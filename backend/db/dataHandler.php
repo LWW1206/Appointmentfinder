@@ -43,6 +43,21 @@ class DataHandler
     return $res;
   }
 
+  /*
+  public function queryAppointmentIdByName($name)
+{
+    include_once("dbaccess.php");
+    $sql = "SELECT ap_id FROM appointments WHERE ap_name = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('s', $name);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($id);
+    $stmt->fetch();
+    return $id;
+}*/
+
+
   public function queryAppointmentOptions($ap_id)
   {
     include_once("dbaccess.php");

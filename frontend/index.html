@@ -25,26 +25,22 @@
       <div class="h2">
         <h2><b>List of all Appointments</b></h2>
       </div>
-      <div class="list-group">
+      <div class="list-group" id="appointments-list">
         <a href="#" class="list-group-item list-group-item-action mylistitem"
           >Cras justo odio
         </a>
-        <a href="#" class="list-group-item list-group-item-action"
-          >Dapibus ac facilisis in</a
-        >
-        <a href="#" class="list-group-item list-group-item-action"
-          >Morbi leo risus</a
-        >
-        <a href="#" class="list-group-item list-group-item-action"
-          >Porta ac consectetur ac</a
-        >
         <a href="#" class="list-group-item list-group-item-action over"
-          >Vestibulum at eros</a
-        >
+          >Vestibulum at eros</a>
       </div>
 
       <div class="Details" style="display: none">
         <h3>Details</h3>
+        <p><strong>Name:</strong> <span id="detail-name"></span></p>
+        <p><strong>Location:</strong> <span id="detail-location"></span></p>
+        <p><strong>Description:</strong> <span id="detail-description"></span></p>
+        <p><strong>Start:</strong> <span id="detail-start"></span></p>
+        <p><strong>End:</strong> <span id="detail-end"></span></p>
+        <p><strong>Creator:</strong> <span id="detail-creator"></span></p>
         <p>This Voting is open until:</p>
         <form action="#">
           <div class="input-box">
@@ -83,40 +79,31 @@
 
       <div class="newApp" style="display: none">
         <h2>New Appointment</h2>
-        <form action="#">
+        <form id="appointment-form" action="#">
           <div class="input-box">
-            <input type="text" placeholder="Name" required="" />
+          <input type="text" placeholder="Name" id="name" name="name" required>  
           </div>
           <div class="input-box">
-            <input type="text" placeholder="Location" required="" />
+          <input type="text" placeholder="Location" id="location" name="location" required>  
           </div>
           <div class="input-box">
-            <input type="date" placeholder="Start Time" required="" />
+          <input type ="text" placeholder="Description" id="description" name="description" required>
           </div>
           <div class="input-box">
-            <input type="date" placeholder="End Time" required="" />
+          <input type="datetime-local" id="start" name="start" required>  
           </div>
           <div class="input-box">
-            <select>
-              <option value="" disabled="" selected="">Choose an option</option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-            </select>
+          <input type="datetime-local" id="end" name="end" required>
           </div>
           <div class="input-box">
-            <select>
-              <option value="" disabled="" selected="">Choose an option</option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-            </select>
+          <input type="text" placeholder="Creator" id="creator" name="creator" required>  
           </div>
-          <button type="submit" class="btn">Create</button>
-        </form>
+        
+          <button type="submit" id="submit-btn" class="btn">Create Appointment</button>
+        </form>       
       </div>
     </div>
 
-    <script src="./js/myscript.js"></script>
+    <script src="./js/controller.js"></script>
   </body>
 </html>

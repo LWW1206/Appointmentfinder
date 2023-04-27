@@ -26,6 +26,14 @@ body {
   background-position: center;
 }
 
+p {
+  color: #fff;
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+
+
 header {
   position: fixed;
   top: 0;
